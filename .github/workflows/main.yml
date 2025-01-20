@@ -12,7 +12,7 @@ on:
         
 
 jobs:
-  test_job:
+  pipeline:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Python
@@ -34,3 +34,12 @@ jobs:
         run:  |
           pip install aws-sam-cli
           pip install awscli
+          
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+
+      - name: Build the lambda
+        run: |
+         source venv/bin/activate
+         echo sam --version
+         sam build
