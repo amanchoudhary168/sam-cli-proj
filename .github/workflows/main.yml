@@ -20,6 +20,9 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+
       - name: Create and activate virtual environment
         run: |
           python -m venv venv
@@ -35,8 +38,6 @@ jobs:
           pip install aws-sam-cli
           pip install awscli
           
-      - name: Checkout repository code
-        uses: actions/checkout@v3
 
       - name: Build the lambda
         run: |
