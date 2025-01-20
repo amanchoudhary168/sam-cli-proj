@@ -1,0 +1,36 @@
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment to run
+        type: choice
+        required: true
+        options:
+          - dev
+          - staging
+          - prod
+        
+
+jobs:
+  test_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+
+      - name: Create and activate virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          
+      - name: Upgrade pip
+        run: |
+          source venv/bin/activate
+          python -m pip install --upgrade pip
+          
+      - name: Install Sam and Aws cli
+        run:  |
+          pip install aws-sam-cli
+          pip install awscli
