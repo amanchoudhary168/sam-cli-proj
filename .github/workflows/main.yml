@@ -43,5 +43,5 @@ jobs:
         run: |
          source venv/bin/activate
          sam build
-         cd .aws-sam/build
+         cd .aws-sam/build/LambdaFunction
          ls -ltr 
