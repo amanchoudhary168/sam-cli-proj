@@ -43,4 +43,5 @@ jobs:
         run: |
          source venv/bin/activate
          sam build
-         ls -ltra
+         cd .aws-sam
+         ls -ltr
