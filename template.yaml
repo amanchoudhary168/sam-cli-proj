@@ -1,0 +1,49 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+ 
+  LambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: era5t-daily-lambda
+      Handler: dataingestion_daily.lambda_handler
+      Runtime: python3.9
+      CodeUri: .
+      MemorySize: 1024
+      Timeout: 600
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+              Resource: "*"
+
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+              Resource: "arn:aws:s3:::non-cat-weather-data/*"  
+      Environment:
+        Variables:
+          CDS_API_KEY: arn:aws:secretsmanager:us-east-1:316284689099:secret:apisecretkey-msVcZv
+
+  LambdaEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: era5tDailyLambdaRule
+      ScheduleExpression: "cron(0 23 * * ? *)"
+      Targets:
+        - Arn: !GetAtt LambdaFunction.Arn
+          Id: "era5tDailyLambdaFunctionTarget"
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:  !Ref LambdaFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt LambdaEventRule.Arn        

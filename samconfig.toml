@@ -1,0 +1,11 @@
+version = 0.1
+
+[default.deploy.parameters]
+stack_name = "data-ingestion-service-stack"
+s3_bucket = "data-ingestion-bucket"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+resolve_s3 = true
+s3_prefix = "data-ingestion-service-stack"
+confirm_changeset = true
+image_repositories = []
