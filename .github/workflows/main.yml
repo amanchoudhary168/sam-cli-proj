@@ -42,5 +42,5 @@ jobs:
       - name: Build the lambda
         run: |
          source venv/bin/activate
-         echo sam --version
          sam build
+         ls -ltr
