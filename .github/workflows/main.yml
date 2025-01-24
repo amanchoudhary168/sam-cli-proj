@@ -7,7 +7,7 @@ on:
         type: choice
         required: true
         options:
-          - dev
+          - DEV
           - stg
           - prod
 env:
@@ -31,4 +31,4 @@ jobs:
       - name: Display role name
         run: |
           echo ${{ env.AWS_ROLE }}
-          
+          echo ${{ secrets.${{ env.AWS_ROLE }} }}
