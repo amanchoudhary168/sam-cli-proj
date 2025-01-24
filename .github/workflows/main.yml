@@ -8,7 +8,7 @@ on:
         required: true
         options:
           - dev
-          - staging
+          - stg
           - prod
 env:
   AWS_REGION: "us-east-1"
@@ -25,32 +25,10 @@ jobs:
       - name: Checkout Lambda Code
         uses: actions/checkout@v3
         
-      - name: Setup AWS
-        uses: aws-actions/configure-aws-credentials@v1.7.0
-        with:
-          role-to-assume: arn:aws:iam::688837050103:role/github-connection-role #change to reflect your IAM role’s ARN
-          role-session-name: GitHub_to_AWS_via_FederatedOIDC
-          aws-region: ${{ env.AWS_REGION }}
-       
-
-      - name: Setup virtual environment
+      - name: Test secret
         run: |
-          python -m venv venv
-          source venv/bin/activate
-          python -m pip install --upgrade pip
-          
-   
-      - name: Setup Sam
-        outputs:
-          hi: hello
-          
-        run:  |
-          pip install aws-sam-cli
-          pip install awscli
-        
-          
-
-      - name: Build the lambda
+          echo "AWS_ROLE= AWS_ROLE_+ ${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+      - name: Display role name
         run: |
-         source venv/bin/activate
-         sam build
+          echo ${{ env.AWS_ROLE }}
+          
