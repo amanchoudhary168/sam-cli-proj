@@ -27,7 +27,7 @@ jobs:
         
       - name: Test secret
         run: |
-          echo "AWS_ROLE= AWS_ROLE_+ ${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          echo "AWS_ROLE= AWS_ROLE_${{ github.event.inputs.environment }}" >> $GITHUB_ENV
       - name: Display role name
         run: |
           echo ${{ env.AWS_ROLE }}
