@@ -10,39 +10,47 @@ on:
           - dev
           - staging
           - prod
-        
+env:
+  AWS_REGION: "us-east-1"
 
 jobs:
-  pipeline:
+  lambda_pipeline:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
 
-      - name: Checkout repository code
+      - name: Checkout Lambda Code
         uses: actions/checkout@v3
+        
+      - name: Setup AWS
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          role-to-assume: arn:aws:iam::688837050103:role/github-connection-role #change to reflect your IAM role’s ARN
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
+       
 
-      - name: Create and activate virtual environment
+      - name: Setup virtual environment
         run: |
           python -m venv venv
           source venv/bin/activate
-          
-      - name: Upgrade pip
-        run: |
-          source venv/bin/activate
           python -m pip install --upgrade pip
           
-      - name: Install Sam and Aws cli
+   
+      - name: Setup Sam
+        outputs:
+          hi: hello
+          
         run:  |
           pip install aws-sam-cli
           pip install awscli
+        
           
 
       - name: Build the lambda
         run: |
          source venv/bin/activate
          sam build
-         cd .aws-sam/build/LambdaFunction
-         ls -ltr 
